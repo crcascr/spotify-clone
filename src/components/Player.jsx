@@ -3,13 +3,13 @@ import { usePlayerStore } from "@/store/playerStore";
 import { Slider } from "./Slider";
 
 export const Pause = () => (
-  <svg role="img" height="24" width="24" aria-hidden="true" viewBox="0 0 16 16">
+  <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
     <path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
   </svg>
 );
 
 export const Play = () => (
-  <svg role="img" height="24" width="24" aria-hidden="true" viewBox="0 0 16 16">
+  <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
     <path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path>
   </svg>
 );
@@ -98,6 +98,56 @@ const CurrentSong = ({ image, title, artists }) => {
   );
 };
 
+const SongControl = ({ audio }) => {
+  const [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    audio.current.addEventListener("timeupdate", handleTimeUpdate);
+    return () => {
+      audio.current.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, []);
+
+  const handleTimeUpdate = () => {
+    setCurrentTime(audio.current.currentTime);
+  };
+
+  const songDuration = audio?.current?.duration ?? 0;
+
+  return (
+    <div className="flex flex-row gap-2 text-s ">
+      <span className="opacity-50 w-12 text-right">
+        {currentTime !== 0 ? secondsToMinutes(currentTime) : "-:--"}
+      </span>
+      <Slider
+        defaultValue={[0]}
+        value={[currentTime]}
+        max={audio?.current?.duration ?? 0}
+        min={0}
+        className="w-[400px]"
+        onValueChange={(value) => {
+          audio.current.currentTime = value;
+        }}
+      />
+
+      <span className="opacity-50 w-12">
+        {!isNaN(songDuration)
+          ? songDuration !== 0
+            ? secondsToMinutes(songDuration)
+            : "-:--"
+          : "-:--"}
+      </span>
+    </div>
+  );
+};
+
+function secondsToMinutes(seconds) {
+  if (seconds == null) return "0:00";
+  const minutes = Math.floor(seconds / 60);
+  const secondsLeft = Math.floor(seconds % 60);
+  return `${minutes}:${secondsLeft < 10 ? "0" : ""}${secondsLeft}`;
+}
+
 function Player() {
   const { currentMusic, isPlaying, setIsPlaying } = usePlayerStore(
     (state) => state
@@ -129,21 +179,25 @@ function Player() {
   };
 
   return (
-    <div className="flex flex-row justify-between w-full px-4 z-50">
-      <div>
+    <div className="flex flex-row justify-between w-full px-2 z-50">
+      <div className="w-[200px]">
         <CurrentSong {...currentMusic.song} />
       </div>
       <div className="grid place-content-center gap-4 flex-1">
-        <div className="flex justify-center">
-          <button className="bg-white rounded-full p-2" onClick={handleClick}>
+        <div className="flex justify-center flex-col items-center">
+          <button
+            className="bg-white rounded-full p-2 w-8 h-8"
+            onClick={handleClick}
+          >
             {isPlaying ? <Pause /> : <Play />}
           </button>
+          <SongControl audio={audioRef} />
           <audio ref={audioRef} />
         </div>
       </div>
       <div className="flex flex-row items-center">
         <button
-          className="rounded-full text-zinc-400 h-8 w-8 flex justify-center items-center"
+          className="rounded-full text-zinc-400 hover:text-zinc-100 transition-all h-8 w-8 flex justify-center items-center"
           onClick={() => {
             if (volumeMemory.actual !== 0) {
               volumeRef.current = 0;
