@@ -13,6 +13,18 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
 const playlistSongs = songs.filter(
   (song) => song.albumId === playlist?.albumId
 );
+
+var playlistDuration = 0;
+playlistSongs.map((song) => {
+  const duration = song.duration.split(":");
+  playlistDuration += parseInt(duration[0]) * 60 + parseInt(duration[1]);
+});
+
+function secondsToHours(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor(seconds / 60);
+  return `${hours > 0 ? `${hours} h` : ""}${minutes} min`;
+}
 ---
 
 <Layout title="Spotify Clone">
@@ -47,7 +59,7 @@ const playlistSongs = songs.filter(
               <span class="text-white"
                 >{playlistSongs.length}
                 {playlistSongs.length === 1 ? "canción" : "canciones"}</span
-              >, 3 h aproximadamente
+              >, cerca de {secondsToHours(playlistDuration)}
             </p>
           </div>
         </div>
