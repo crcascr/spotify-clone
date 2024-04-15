@@ -14,6 +14,24 @@ export const Play = ({ className }) => (
   </svg>
 );
 
+export const Previous = () => (
+  <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
+    <path
+      d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"
+      fill="currentColor"
+    ></path>
+  </svg>
+);
+
+export const Next = () => (
+  <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
+    <path
+      d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"
+      fill="currentColor"
+    ></path>
+  </svg>
+);
+
 export const VolumeMuted = () => (
   <svg
     role="presentation"
@@ -149,7 +167,7 @@ function secondsToMinutes(seconds) {
 }
 
 function Player() {
-  const { currentMusic, isPlaying, setIsPlaying } = usePlayerStore(
+  const { currentMusic, isPlaying, setIsPlaying, setCurrentMusic } = usePlayerStore(
     (state) => state
   );
   const audioRef = useRef();
@@ -178,6 +196,27 @@ function Player() {
     setIsPlaying(!isPlaying);
   };
 
+  const handlePrevious = () => {
+    const { song, playlist, songs } = currentMusic;
+    console.log(songs);
+    if (song) {
+      if (songs.length > 1 && song.id > 1) {
+        const previousSong = songs[song.id-1 - 1];
+        setCurrentMusic({ playlist, songs, song: previousSong });
+      }
+    }
+  };
+
+  const handleNext = () => {
+    const { song, playlist, songs } = currentMusic;
+    if (song) {
+      if (songs.length > 1 && song.id < songs.length) {
+        const nextSong = songs[song.id-1 + 1];
+        setCurrentMusic({ playlist, songs, song: nextSong });
+      }
+    }
+  };
+
   return (
     <div className="flex flex-row justify-between w-full px-2 z-50">
       <div className="w-[200px]">
@@ -185,12 +224,26 @@ function Player() {
       </div>
       <div className="grid place-content-center gap-4 flex-1">
         <div className="flex justify-center flex-col items-center">
-          <button
-            className="bg-white rounded-full p-2 w-8 h-8"
-            onClick={handleClick}
-          >
-            {isPlaying ? <Pause /> : <Play />}
-          </button>
+          <div className="flex flex-row gap-4">
+            <button
+              className="text-white/[0.7] p-2 w-8 h-8 hover:text-white"
+              onClick={handlePrevious}
+            >
+              <Previous />
+            </button>
+            <button
+              className="bg-white rounded-full p-2 w-8 h-8"
+              onClick={handleClick}
+            >
+              {isPlaying ? <Pause /> : <Play />}
+            </button>
+            <button
+              className="text-white/[0.7] p-2 w-8 h-8 hover:text-white"
+              onClick={handleNext}
+            >
+              <Next />
+            </button>
+          </div>
           <SongControl audio={audioRef} />
           <audio ref={audioRef} />
         </div>
