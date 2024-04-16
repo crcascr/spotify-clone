@@ -71,7 +71,7 @@ function secondsToHours(seconds: number) {
       <CardPlayButton id={id} client:load size="medium" />
     </div>
     <div class="relative z-10 px-6">
-      <PlaylistSongsTable client:load songs={playlistSongs} />
+      <PlaylistSongsTable client:load  playlistSelected={playlist} songs={playlistSongs} />
     </div>
     <div
       class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80 -z-10"

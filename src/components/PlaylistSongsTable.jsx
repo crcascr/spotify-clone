@@ -1,5 +1,7 @@
 import { usePlayerStore } from "@/store/playerStore";
 import PlayingEqualizer from "@/icons/PlayingEqualizer.gif";
+import { Play, Pause } from "./Player";
+import { useState } from "react";
 
 export const Time = () => (
   <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
@@ -14,9 +16,13 @@ export const Time = () => (
   </svg>
 );
 
-function PlaylistSongsTable({ songs }) {
+function PlaylistSongsTable({ songs, playlistSelected }) {
   const { currentMusic, isPlaying, setIsPlaying, setCurrentMusic } =
     usePlayerStore((state) => state);
+
+  const playlist = playlistSelected;
+
+  const [hoveredRow, setHoveredRow] = useState(null);
 
   return (
     <table className="table-auto text-left min-w-full divide-y divide-gray-500/20">
@@ -34,6 +40,8 @@ function PlaylistSongsTable({ songs }) {
           <tr
             key={index}
             className="h-14 hover:bg-white/10 transition duration-200"
+            onMouseEnter={() => setHoveredRow(song)}
+            onMouseLeave={() => setHoveredRow(null)}
           >
             <td
               className={`px-4 py-2 rounded-l w-5 ${
@@ -46,18 +54,41 @@ function PlaylistSongsTable({ songs }) {
               {currentMusic?.song?.id === song.id &&
               currentMusic?.song?.albumId === song.albumId ? (
                 isPlaying ? (
-                  <picture>
-                    <img
-                      src={PlayingEqualizer.src}
-                      alt="Playing Equalizer"
-                      className="w-3.5 h-3.5"
-                    />
-                  </picture>
+                  hoveredRow?.id === song.id ? (
+                    <button onClick={() => setIsPlaying(false)}>
+                      <Pause className="w-3.5 h-3.5 fill-white" />
+                    </button>
+                  ) : (
+                    <picture className="min-w-[14px] min-h-[14px]">
+                      <img
+                        src={PlayingEqualizer.src}
+                        alt="Playing Equalizer"
+                        className="min-w-[14px] min-h-[14px]"
+                      />
+                    </picture>
+                  )
+                ) : hoveredRow?.id === song.id ? (
+                  <button onClick={() => setIsPlaying(true)}>
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                  </button>
                 ) : (
-                  index + 1
+                  <p className="w-3.5 h-3.5 p-0 flex items-center content-center flex-wrap">
+                    {index + 1}
+                  </p>
                 )
+              ) : hoveredRow?.id === song.id ? (
+                <button
+                  onClick={() => {
+                    setCurrentMusic({ playlist, song, songs });
+                    setIsPlaying(true);
+                  }}
+                >
+                  <Play className="w-3.5 h-3.5 fill-white" />
+                </button>
               ) : (
-                index + 1
+                <p className="w-3.5 h-3.5 p-0 flex items-center content-center flex-wrap">
+                  {index + 1}
+                </p>
               )}
             </td>
             <td className="px-4 py-2 flex gap-3">
@@ -85,7 +116,9 @@ function PlaylistSongsTable({ songs }) {
               </div>
             </td>
             <td className="px-4 py-2 text-sm text-gray-400">{song.album}</td>
-            <td className="px-4 py-2 text-sm text-gray-400">{song.duration}</td>
+            <td className="px-4 py-2 text-sm text-gray-400 rounded-r">
+              {song.duration}
+            </td>
           </tr>
         ))}
       </tbody>
