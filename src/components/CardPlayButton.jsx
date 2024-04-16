@@ -7,11 +7,18 @@ function CardPlayButton({ id, size = "small" }) {
     usePlayerStore((state) => state);
 
   const isPlayingPlaylist = isPlaying && currentMusic?.playlist.id === id;
+  const isPausedPlaylist = !isPlaying && currentMusic?.playlist?.id === id;
 
   const handleClick = () => {
-    if (isPlayingPlaylist) {
-      setIsPlaying(false);
-      return;
+    {
+      if (isPlayingPlaylist) {
+        setIsPlaying(false);
+        return;
+      }
+      if (isPausedPlaylist) {
+        setIsPlaying(true);
+        return;
+      }
     }
 
     fetch(`/api/get-info-playlist-json?id=${id}`)
