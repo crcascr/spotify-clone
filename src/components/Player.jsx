@@ -143,7 +143,7 @@ const SongControl = ({ audio }) => {
     setCurrentTime(audio.current.currentTime);
   };
 
-  const songDuration = audio?.current?.duration ?? 0;  
+  const songDuration = audio?.current?.duration ?? 0;
 
   if (songDuration === currentTime && songDuration !== 0) {
     const { song, playlist, songs } = currentMusic;
@@ -167,7 +167,8 @@ const SongControl = ({ audio }) => {
         value={[currentTime]}
         max={audio?.current?.duration ?? 0}
         min={0}
-        className="w-[400px]"
+        className={`w-[400px] ${currentMusic.song===null ? "cursor-not-allowed" : "cursor-default"}`}
+        disabled={currentMusic.song === null}
         onValueChange={(value) => {
           audio.current.currentTime = value;
         }}
@@ -261,21 +262,35 @@ function Player() {
         <div className="flex justify-center flex-col items-center">
           <div className="flex flex-row gap-4">
             <button
-              className="text-white/[0.7] p-2 w-8 h-8 hover:text-white"
+              className={`text-white/[0.7] p-2 w-8 h-8 ${
+                currentMusic.song === null
+                  ? "opacity-50 cursor-not-allowed"
+                  : "opacity-100 cursor-pointer hover:text-white"
+              }`}
               onClick={handlePrevious}
             >
               <Previous />
             </button>
             <button
-              className="bg-white rounded-full p-2 w-8 h-8"
+              className={`bg-white rounded-full p-2 w-8 h-8 ${
+                currentMusic.song === null
+                  ? "opacity-50 cursor-not-allowed"
+                  : "opacity-100 cursor-pointer"
+              }`}
               onClick={handleClick}
+              disabled={currentMusic.song === null}
             >
               {isPlaying ? <Pause /> : <Play />}
             </button>
             <div className="flex flex-row gap-2">
               <button
-                className="text-white/[0.7] p-2 w-8 h-8 hover:text-white"
+                className={`text-white/[0.7] p-2 w-8 h-8 ${
+                  currentMusic.song === null
+                    ? "opacity-50 cursor-not-allowed"
+                    : "opacity-100 cursor-pointer hover:text-white"
+                }`}
                 onClick={handleNext}
+                disabled={currentMusic.song === null}
               >
                 <Next />
               </button>
