@@ -26,16 +26,23 @@ function PlaylistSongsTable({ songs, playlistSelected }) {
 
   return (
     <table className="table-auto text-left min-w-full divide-y divide-gray-500/20">
-      <thead className="text-gray-400 text-sm">
-        <th className="px-4 py-2 font-normal">#</th>
-        <th className="px-4 py-2 font-normal">Título</th>
-        <th className="px-4 py-2 font-normal">Álbum</th>
-        <th className="px-4 py-2 font-normal">
-          <Time />
-        </th>
+      <thead className="text-gray-400 text-sm border-collapse">
+        <tr>
+          <th className="px-4 py-2 font-normal">#</th>
+          <th className="px-4 py-2 font-normal">Título</th>
+          <th className="px-4 py-2 font-normal">Álbum</th>
+          <th className="px-4 py-2 font-normal">
+            <Time />
+          </th>
+        </tr>
       </thead>
       <tbody>
-        <tr className="h-[10px]"></tr>
+        <tr className="h-[10px]">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
         {songs.map((song, index) => (
           <tr
             key={index}
