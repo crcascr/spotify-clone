@@ -1,0 +1,96 @@
+import { usePlayerStore } from "@/store/playerStore";
+import PlayingEqualizer from "@/icons/PlayingEqualizer.gif";
+
+export const Time = () => (
+  <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
+    <path
+      d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"
+      fill="currentColor"
+    ></path>
+    <path
+      d="M8 3.25a.75.75 0 0 1 .75.75v3.25H11a.75.75 0 0 1 0 1.5H7.25V4A.75.75 0 0 1 8 3.25z"
+      fill="currentColor"
+    ></path>
+  </svg>
+);
+
+function PlaylistSongsTable({ songs }) {
+  const { currentMusic, isPlaying, setIsPlaying, setCurrentMusic } =
+    usePlayerStore((state) => state);
+
+  return (
+    <table className="table-auto text-left min-w-full divide-y divide-gray-500/20">
+      <thead className="text-gray-400 text-sm">
+        <th className="px-4 py-2 font-normal">#</th>
+        <th className="px-4 py-2 font-normal">Título</th>
+        <th className="px-4 py-2 font-normal">Álbum</th>
+        <th className="px-4 py-2 font-normal">
+          <Time />
+        </th>
+      </thead>
+      <tbody>
+        <tr className="h-[10px]"></tr>
+        {songs.map((song, index) => (
+          <tr
+            key={index}
+            className="h-14 hover:bg-white/10 transition duration-200"
+          >
+            <td
+              className={`px-4 py-2 rounded-l w-5 ${
+                currentMusic?.song?.id === song.id &&
+                currentMusic?.song?.albumId === song.albumId
+                  ? "text-green-500"
+                  : "text-white"
+              }`}
+            >
+              {currentMusic?.song?.id === song.id &&
+              currentMusic?.song?.albumId === song.albumId ? (
+                isPlaying ? (
+                  <picture>
+                    <img
+                      src={PlayingEqualizer.src}
+                      alt="Playing Equalizer"
+                      className="w-3.5 h-3.5"
+                    />
+                  </picture>
+                ) : (
+                  index + 1
+                )
+              ) : (
+                index + 1
+              )}
+            </td>
+            <td className="px-4 py-2 flex gap-3">
+              <picture className="">
+                <img
+                  src={song.image}
+                  alt={song.title}
+                  className="w-10 h-10 rounded"
+                />
+              </picture>
+              <div className="flex flex-col">
+                <h3
+                  className={
+                    currentMusic?.song?.id === song.id &&
+                    currentMusic?.song?.albumId === song.albumId
+                      ? "text-green-500"
+                      : "text-white"
+                  }
+                >
+                  {song.title}
+                </h3>
+                <span className="text-sm text-gray-400">
+                  {song.artists?.join(", ")}
+                </span>
+              </div>
+            </td>
+            <td className="px-4 py-2 text-sm text-gray-400">{song.album}</td>
+            <td className="px-4 py-2 text-sm text-gray-400">{song.duration}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export default PlaylistSongsTable;

@@ -5,6 +5,7 @@ import { allPlaylists, songs } from "@/lib/data";
 import PlaylistItemCard from "@/components/PlaylistItemCard.astro";
 import PlaylistTable from "@/components/PlaylistTable.astro";
 import CardPlayButton from "@/components/CardPlayButton";
+import PlaylistSongsTable from "@/components/PlaylistSongsTable";
 
 const { id } = Astro.params;
 
@@ -70,7 +71,7 @@ function secondsToHours(seconds: number) {
       <CardPlayButton id={id} client:load size="medium" />
     </div>
     <div class="relative z-10 px-6">
-      <PlaylistTable songs={playlistSongs} />
+      <PlaylistSongsTable client:load songs={playlistSongs} />
     </div>
     <div
       class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80 -z-10"
