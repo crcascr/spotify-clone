@@ -2,8 +2,6 @@
 import Layout from "../../layouts/Layout.astro";
 
 import { allPlaylists, songs } from "@/lib/data";
-import PlaylistItemCard from "@/components/PlaylistItemCard.astro";
-import PlaylistTable from "@/components/PlaylistTable.astro";
 import CardPlayButton from "@/components/CardPlayButton";
 import PlaylistSongsTable from "@/components/PlaylistSongsTable";
 
@@ -23,7 +21,7 @@ playlistSongs.map((song) => {
 
 function secondsToHours(seconds: number) {
   const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor(seconds / 60);
+  const minutes = Math.ceil(seconds / 60);
   return `${hours > 0 ? `${hours} h` : ""}${minutes} min`;
 }
 ---
