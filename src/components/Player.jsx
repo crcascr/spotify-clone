@@ -255,7 +255,7 @@ function Player() {
 
   return (
     <div className="flex flex-row justify-between w-full px-2 z-50">
-      <div className="w-[200px]">
+      <div className="w-auto">
         <CurrentSong {...currentMusic.song} />
       </div>
       <div className="grid place-content-center gap-4 flex-1">
