@@ -129,6 +129,9 @@ const CurrentSong = ({ image, title, artists }) => {
 const SongControl = ({ audio }) => {
   const [currentTime, setCurrentTime] = useState(0);
 
+  const { currentMusic, isPlaying, setIsPlaying, setCurrentMusic } =
+    usePlayerStore((state) => state);
+
   useEffect(() => {
     audio.current.addEventListener("timeupdate", handleTimeUpdate);
     return () => {
@@ -140,7 +143,19 @@ const SongControl = ({ audio }) => {
     setCurrentTime(audio.current.currentTime);
   };
 
-  const songDuration = audio?.current?.duration ?? 0;
+  const songDuration = audio?.current?.duration ?? 0;  
+
+  if (songDuration === currentTime && songDuration !== 0) {
+    const { song, playlist, songs } = currentMusic;
+    if (song.id < songs.length) {
+      setCurrentTime(0);
+      const nextSong = songs[song.id];
+      setCurrentMusic({ playlist, songs, song: nextSong });
+    } else {
+      setCurrentTime(0);
+      setIsPlaying(false);
+    }
+  }
 
   return (
     <div className="flex flex-row gap-2 text-s ">
