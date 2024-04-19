@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { usePlayerStore } from "@/store/playerStore";
+import { usePlayerStore } from "../store/playerStore";
 import { Slider } from "./Slider";
 
 export const Pause = ({ className }) => (

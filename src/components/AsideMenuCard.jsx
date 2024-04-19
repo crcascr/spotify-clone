@@ -1,4 +1,4 @@
-import { usePlayerStore } from "@/store/playerStore";
+import { usePlayerStore } from "../store/playerStore";
 
 export const ActualSong = ({ fillColor }) => (
   <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">

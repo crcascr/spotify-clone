@@ -1,5 +1,5 @@
-import { usePlayerStore } from "@/store/playerStore";
-import PlayingEqualizer from "@/icons/PlayingEqualizer.gif";
+import { usePlayerStore } from "../store/playerStore";
+import PlayingEqualizer from "../icons/PlayingEqualizer.gif";
 import { Play, Pause } from "./Player";
 import { useState } from "react";
 

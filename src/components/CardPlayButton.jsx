@@ -1,6 +1,6 @@
 import { Pause, Play } from "./Player";
 
-import { usePlayerStore } from "@/store/playerStore";
+import { usePlayerStore } from "../store/playerStore";
 
 function CardPlayButton({ id, size = "small" }) {
   const { currentMusic, isPlaying, setCurrentMusic, setIsPlaying } =
